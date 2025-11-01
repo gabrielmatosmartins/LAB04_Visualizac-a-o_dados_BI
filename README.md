@@ -79,6 +79,8 @@ Explora a correlação entre complexidade e qualidade:
 - Visual utilizado: Gráfico de linha por mês (SLOC e qualidade)
 - **Conclusão:** Sim, meses com maior volume de código alterado apresentam pior taxa de qualidade.
 
+<img width="635" height="355" alt="BI" src="https://github.com/user-attachments/assets/fcd877f9-fef3-4bf5-95aa-ba503ee0f09b" />
+
 ---
 
 ## Metodologia
