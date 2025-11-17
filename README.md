@@ -30,54 +30,64 @@ As métricas foram extraídas e transformadas para permitir comparações entre 
 
 ## Especificação do Dashboard
 
+O dashboard foi organizado para responder às questões de pesquisa sobre o **impacto do tamanho dos commits na qualidade do código**, seguindo a metodologia do estudo de referência [[1]](#referências). Os commits foram classificados em faixas de tamanho baseadas em `changed_sloc` (commits únicos, que são os commits pequenos (entre 1 e 100 sloc) e commits agregrados, que sãos os commits grandes (a partir de 100 sloc)) para análise comparativa.
+
 O dashboard foi dividido em **três seções principais**:
 
-### 1 Caracterização do Dataset
-Mostra uma visão geral da atividade de desenvolvimento:
+### 1 Relação entre Tamanho de Commits e Code Smells (RQ1)
+Analisa qual faixa de tamanho de commits está mais associada à introdução de _code smells_:
 
-- **Título:** _Evolução de Commits e SLOC Alterado_
-- **Descrição:** Gráfico de linha mostrando a evolução mensal da quantidade de commits e das linhas de código alteradas (`changed_sloc`).
-- **Insight:** Permite observar picos de atividade e períodos de maior produtividade.
+- **Título:** _Distribuição de Code Smells por Tamanho de Commit_  
+- **Descrição:** Gráfico de dispersão ou histograma mostrando a relação entre `changed_sloc` (ou faixas de tamanho) e `total_code_smells`.  
+- **Insight:** Permite identificar se commits maiores introduzem proporcionalmente mais _code smells_ que commits menores.  
 
----
-
-### 2 Análise de Qualidade de Código
-Destina-se a avaliar a **manutenção e qualidade dos repositórios**:
-
-- **Título:** _Code Smells e Índice de Qualidade por Mês_  
-- **Descrição:** Linha dupla comparando o total de _code smells_ gerados e a taxa de qualidade calculada.  
-- **Insight:** Uma queda na taxa de qualidade costuma acompanhar aumento no número de _code smells_.  
-
-- **Título:** _Distribuição de Severidades de Problemas por Mês_  
-- **Descrição:** Gráfico de barras empilhadas mostrando quantos _Blockers_, _Criticals_, _Majors_, _Minors_ e _Infos_ ocorreram em cada mês.  
-- **Insight:** Facilita entender o peso de cada tipo de problema no código ao longo do tempo.  
+- **Título:** _Média de Code Smells por Faixa de Tamanho_  
+- **Descrição:** Gráfico de barras comparando a média de _code smells_ por commit em cada categoria de tamanho (Small, Medium, Large, Very Large).  
+- **Insight:** Facilita a comparação direta do impacto de cada faixa de tamanho na introdução de problemas de código.  
 
 ---
 
-### 3 Métricas de Complexidade e Débito Técnico
-Explora a correlação entre complexidade e qualidade:
+### 2 Impacto do Tamanho dos Commits na Qualidade do Código (RQ2)
+Avalia como diferentes tamanhos de commits afetam métricas de qualidade:
 
-- **Título:** _Variação de CBO, RFC e WMC vs. SLOC Alterado_  
-- **Descrição:** Gráfico de linhas multi-série mostrando a variação de complexidade em função da quantidade de código alterado.  
-- **Insight:** Repositórios com muitas alterações tendem a aumentar a complexidade média.  
+- **Título:** _Taxa de Qualidade por Faixa de Tamanho de Commit_  
+- **Descrição:** Gráfico de barras agrupadas ou linhas mostrando a `Taxa de Qualidade` (code smells por SLOC) para cada categoria de tamanho de commit.  
+- **Insight:** Revela se commits maiores degradam mais a qualidade do código em relação ao volume alterado.  
 
-- **Título:** _Ranking de Repositórios — Qualidade e Débito Técnico_  
-- **Descrição:** Tabela consolidando as métricas de _Code Smells_, _Débito Técnico Score_, e _Stars_ de cada projeto.  
-- **Insight:** É possível identificar os projetos mais críticos e os com melhor qualidade de manutenção.  
+- **Título:** _Distribuição de Commits e Code Smells por Tamanho_  
+- **Descrição:** Gráfico de barras empilhadas ou treemap mostrando a proporção de commits e o total de _code smells_ em cada faixa de tamanho.  
+- **Insight:** Permite entender se commits grandes, mesmo sendo menos frequentes, contribuem desproporcionalmente para a degradação da qualidade.  
+
+---
+
+### 3 Distribuição de Criticidades por Tamanho de Commit (RQ3)
+Explora a proporção de cada tipo de severidade de _code smell_ em relação ao tamanho dos commits:
+
+- **Título:** _Proporção de Severidades por Faixa de Tamanho_  
+- **Descrição:** Gráfico de barras empilhadas (100%) mostrando a distribuição percentual de _Blockers_, _Criticals_, _Majors_, _Minors_ e _Infos_ em cada categoria de tamanho.  
+- **Insight:** Identifica se commits maiores tendem a introduzir problemas mais críticos (Blockers/Criticals) ou se mantêm a mesma proporção de severidades.  
+
+- **Título:** _Quantidade Absoluta de Severidades por Tamanho_  
+- **Descrição:** Gráfico de barras agrupadas mostrando a quantidade absoluta de cada tipo de severidade por faixa de tamanho de commit.  
+- **Insight:** Complementa a análise anterior mostrando o volume real de problemas críticos introduzidos por cada categoria de commit.  
 
 ---
 
 ## Questões de Pesquisa (RQs)
 
-### **RQ1:** A complexidade de código influencia a quantidade de _code smells_?
-- Métricas envolvidas: `CBO Médio`, `RFC Médio`, `WMC Médio`
-- Visual utilizado: Gráfico de dispersão (complexidade vs. _code smells_)
-- **Conclusão:** Existe correlação positiva — repositórios mais complexos tendem a acumular mais _code smells_.
+As questões de pesquisa foram formuladas com base no estudo sobre o impacto de commits grandes na qualidade de código [[1]](#referências).
 
-### **RQ2:** Commits com maior número de alterações tendem a piorar a qualidade do código?
-- Métricas envolvidas: `SLOC Alterado`, `Code Smells`, `Taxa de Qualidade`
-- Visual utilizado: Gráfico de linha por mês (SLOC e qualidade)
-- **Conclusão:** Sim, meses com maior volume de código alterado apresentam pior taxa de qualidade.
+### **RQ1:** Qual tamanho de commits mais se relaciona com a introdução de _code smells_?
+- Métricas envolvidas: `changed_sloc`, `changed_files`, `total_code_smells`
+- Visual utilizado: Gráfico de dispersão ou histograma (tamanho do commit vs. _code smells_)
+
+### **RQ2:** Qual o impacto do tamanho dos commits na qualidade do código?
+- Métricas envolvidas: `changed_sloc`, `Taxa de Qualidade`, `total_code_smells`
+- Visual utilizado: Gráfico de linha ou barras agrupadas por faixa de tamanho de commit
+
+### **RQ3:** Qual a proporção de cada tipo de criticidade de _code smell_ de acordo com o tamanho do commit?
+- Métricas envolvidas: `changed_sloc`, `blocker_quantity`, `critical_quantity`, `major_quantity`, `minor_quantity`, `info_quantity`
+- Visual utilizado: Gráfico de barras empilhadas ou gráfico de pizza por faixa de tamanho
 
 <img width="635" height="355" alt="BI" src="https://github.com/user-attachments/assets/fcd877f9-fef3-4bf5-95aa-ba503ee0f09b" />
 
@@ -119,3 +129,10 @@ Débito Técnico Score =
     [Total Minor] * 1
 Índice de Complexidade =
     ( [CBO Médio] + [RFC Médio] + [WMC Médio] ) / 3
+```
+
+---
+
+## Referências
+
+[1] Impacto de Commits Grandes na Qualidade de Código e Estabilidade de Features em App Java. Disponível em: `impacto-commits-grandes-na-qualidade-de-codigo-estabilidade-de-features-em-app-java.pdf`
